@@ -890,7 +890,9 @@ var App = function (_Component) {
     }
   }, {
     key: 'handleEnd',
-    value: function handleEnd() {
+    value: function handleEnd(desc) {
+      var el = document.getElementById(desc);
+      el.blur();
       this.setState({
         play: false,
         display: '_ _ _'
@@ -922,39 +924,39 @@ var App = function (_Component) {
 
       var audioPads = [{
         id: 'Q',
-        desc: 'test',
+        desc: 'test1',
         src: 'AudioTest.wav'
       }, {
         id: 'W',
-        desc: 'test',
+        desc: 'test2',
         src: 'AudioTest.wav'
       }, {
         id: 'E',
-        desc: 'test',
+        desc: 'test3',
         src: 'AudioTest.wav'
       }, {
         id: 'A',
-        desc: 'test',
+        desc: 'test4',
         src: 'AudioTest.wav'
       }, {
         id: 'S',
-        desc: 'test',
+        desc: 'test5',
         src: 'AudioTest.wav'
       }, {
         id: 'D',
-        desc: 'test',
+        desc: 'test6',
         src: 'AudioTest.wav'
       }, {
         id: 'Z',
-        desc: 'test',
+        desc: 'test7',
         src: 'AudioTest.wav'
       }, {
         id: 'X',
-        desc: 'test',
+        desc: 'test8',
         src: 'AudioTest.wav'
       }, {
         id: 'C',
-        desc: 'test',
+        desc: 'test9',
         src: 'AudioTest.wav'
       }];
       var pads = audioPads.map(function (pad) {
@@ -8013,7 +8015,9 @@ function Audio(props) {
         return click(id, event);
       },
       tabIndex: '0' },
-    _react2.default.createElement('audio', { id: id, src: src, autoPlay: play, onEnded: end,
+    _react2.default.createElement('audio', { id: id, src: src, autoPlay: play, onEnded: function onEnded() {
+        return end(desc);
+      },
       className: 'clip' }),
     id
   );

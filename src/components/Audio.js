@@ -5,7 +5,7 @@ export default function Audio(props) {
   return (
     <div id={desc} className='drum-pad' onClick={(event) => click(id, event)}
        tabIndex='0'>
-      <audio id={id} src={src} autoPlay={play} onEnded={end} 
+      <audio id={id} src={src} autoPlay={play} onEnded={() => end(desc)} 
         className='clip'></audio>
       {id}
     </div>
