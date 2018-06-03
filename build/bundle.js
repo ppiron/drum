@@ -863,9 +863,12 @@ var App = function (_Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
 
     _this.state = {
-      play: false,
-      display: '_ _ _'
+      playCount: 0,
+      display: '_ _ _ _ _ _ _',
+      active: [],
+      activeNames: []
     };
+
     _this.handleClick = _this.handleClick.bind(_this);
     _this.handleKeyPress = _this.handleKeyPress.bind(_this);
     _this.handleEnd = _this.handleEnd.bind(_this);
@@ -879,43 +882,63 @@ var App = function (_Component) {
     }
   }, {
     key: 'handleClick',
-    value: function handleClick(id, event) {
-      var name = event.target.id;
+    value: function handleClick(id, desc, event) {
+
       var el = document.getElementById(id);
-      !this.state.play && el.play();
+      var par = el.parentElement;
+      var name = event.target.id;
+
+      // if (!this.state.play) {
+      el.play();
+      par.style.backgroundColor = 'blueviolet';
+      par.style.transitionDuration = '150ms';
+      par.style.transform = 'scale(0.95)';
       this.setState({
-        play: true,
-        display: name
+        playCount: this.state.playCount + 1,
+        display: this.state.activeNames.concat([desc]).join(' + '),
+        active: this.state.active.concat([id]),
+        activeNames: this.state.activeNames.concat([desc])
       });
-    }
-  }, {
-    key: 'handleEnd',
-    value: function handleEnd(desc) {
-      var el = document.getElementById(desc);
-      el.blur();
-      this.setState({
-        play: false,
-        display: '_ _ _'
-      });
+      // }
     }
   }, {
     key: 'handleKeyPress',
     value: function handleKeyPress() {
+
       var keys = ['Q', 'W', 'E', 'A', 'S', 'D', 'Z', 'X', 'C'];
+
       if (keys.includes(event.key.toUpperCase())) {
         var el = document.getElementById(event.key.toUpperCase());
         var par = el.parentElement;
-        par.focus();
         var name = par.getAttribute('id');
-        !this.state.play && el.play();
-        this.setState({
-          play: true,
-          display: name
-        });
-        el.onended = function () {
-          par.blur();
-        };
+        if (!this.state.play) {
+          el.play();
+          par.style.backgroundColor = 'blueviolet';
+          par.style.transitionDuration = '150ms';
+          par.style.transform = 'scale(0.95)';
+          this.setState({
+            play: true,
+            display: name,
+            active: event.key.toUpperCase()
+          });
+        }
       }
+    }
+  }, {
+    key: 'handleEnd',
+    value: function handleEnd(id, desc) {
+
+      var el = document.getElementById(desc);
+      el.style.backgroundColor = null;
+      el.style.transform = null;
+      this.setState(function (state) {
+        return {
+          playCount: state.playCount - 1,
+          display: state.playCount > 1 ? state.activeNames.slice(1, state.activeNames.length).join(' + ') : '_ _ _ _ _ _ _',
+          active: state.active.slice(1, state.active.length),
+          activeNames: state.activeNames.slice(1, state.activeNames.length)
+        };
+      });
     }
   }, {
     key: 'render',
@@ -960,7 +983,7 @@ var App = function (_Component) {
         src: 'AudioTest.wav'
       }];
       var pads = audioPads.map(function (pad) {
-        return _react2.default.createElement(_Audio2.default, { key: pad.id, id: pad.id, desc: pad.desc,
+        return _react2.default.createElement(_Audio2.default, { key: pad.id, id: pad.id, desc: pad.desc, isActive: _this2.state.active.includes(pad.id),
           src: pad.src, click: _this2.handleClick, end: _this2.handleEnd });
       });
       return _react2.default.createElement(
@@ -8004,22 +8027,32 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function Audio(props) {
   var desc = props.desc,
       src = props.src,
-      play = props.play,
       id = props.id,
+      isActive = props.isActive,
       click = props.click,
       end = props.end;
 
+  var className = 'drum-pad';
+  if (isActive) {
+    className += ' drum-pad-active';
+  }
   return _react2.default.createElement(
     'div',
-    { id: desc, className: 'drum-pad', onClick: function onClick(event) {
-        return click(id, event);
+    { id: desc, className: className, onClick: function onClick(event) {
+        return click(id, desc, event);
       },
       tabIndex: '0' },
-    _react2.default.createElement('audio', { id: id, src: src, autoPlay: play, onEnded: function onEnded() {
-        return end(desc);
+    _react2.default.createElement('audio', { id: id, src: src, onEnded: function onEnded() {
+        return end(id, desc);
       },
       className: 'clip' }),
-    id
+    _react2.default.createElement(
+      'p',
+      null,
+      desc,
+      _react2.default.createElement('br', null),
+      id
+    )
   );
 }
 

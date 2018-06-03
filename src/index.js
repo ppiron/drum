@@ -3,12 +3,17 @@ import { render } from 'react-dom';
 import Audio from './components/Audio.js'
 
 class App extends Component {
+  
   constructor() {
     super();
+    
     this.state = {
-      play: false,
-      display: '_ _ _',
+      playCount: 0,
+      display: '_ _ _ _ _ _ _',
+      active: [],
+      activeNames: [],
     };
+
     this.handleClick = this.handleClick.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleEnd = this.handleEnd.bind(this);
@@ -18,44 +23,69 @@ class App extends Component {
     document.addEventListener('keyup', this.handleKeyPress);
   }
 
-  handleClick(id, event) {
-    const name = event.target.id;
+  handleClick(id, desc, event) {
+    
     const el = document.getElementById(id);
-    !this.state.play && el.play();
-    this.setState({
-      play: true,
-      display: name,
-    })
+    const par = el.parentElement;
+    const name = event.target.id;
+    
+    // if (!this.state.play) {
+      el.play();
+      par.style.backgroundColor = 'blueviolet';
+      par.style.transitionDuration = '150ms';
+      par.style.transform = 'scale(0.95)';
+      this.setState({
+        playCount: this.state.playCount + 1,
+        display: this.state.activeNames.concat([desc]).join(' + '),
+        active: this.state.active.concat([id]),
+        activeNames: this.state.activeNames.concat([desc]),
+      })
+    // }
   }
 
-  handleEnd(desc) {
-    const el = document.getElementById(desc);
-    el.blur();
-    this.setState({
-      play: false,
-      display: '_ _ _',
-    })
-  }
-
+  
   handleKeyPress() {
+    
     const keys = ['Q', 'W', 'E', 'A', 'S', 'D', 'Z', 'X', 'C']
+    
     if (keys.includes(event.key.toUpperCase())) {
       const el = document.getElementById(event.key.toUpperCase());
       const par = el.parentElement;
-      par.focus();
       const name = par.getAttribute('id');
-      !this.state.play && el.play();
-      this.setState({
-        play: true,
-        display: name,
-      })
-      el.onended = function() {
-        par.blur();
+      if (!this.state.play) {
+        el.play();
+        par.style.backgroundColor = 'blueviolet';
+        par.style.transitionDuration = '150ms';
+        par.style.transform = 'scale(0.95)';
+        this.setState({
+          play: true,
+          display: name,
+          active: event.key.toUpperCase(),
+        })
       }
     }
   }
 
-  render() {
+  handleEnd(id, desc) {
+    
+    const el = document.getElementById(desc);
+    el.style.backgroundColor = null;
+    el.style.transform = null;
+    this.setState((state) => {
+      return (
+        {
+          playCount: state.playCount - 1,
+          display:  state.playCount > 1 ? 
+                    state.activeNames.slice(1, state.activeNames.length).join(' + ') :
+                    '_ _ _ _ _ _ _',
+          active: state.active.slice(1, state.active.length),
+          activeNames: state.activeNames.slice(1, state.activeNames.length),
+        }
+      )
+    })
+  }
+
+  render() { 
     const audioPads = [
       {
         id: 'Q',
@@ -106,7 +136,7 @@ class App extends Component {
     const pads = audioPads.map(
       (pad) => {
         return (
-          <Audio key={pad.id} id={pad.id } desc={pad.desc}
+          <Audio key={pad.id} id={pad.id } desc={pad.desc} isActive={this.state.active.includes(pad.id)}
             src={pad.src} click={this.handleClick} end={this.handleEnd}>
           </Audio>
         )

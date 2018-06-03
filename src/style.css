@@ -1,22 +1,75 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  font-family: 'Lato', sans-serif;
+}
+
+#drum-machine {
+  width: 400px;
+  height: 500px;
+  margin: 0 auto;
+  border: 1px solid lightskyblue;
+  border-radius: 5px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 80px repeat(3, 1fr);
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  grid-template-areas:
+  "display display display" 
+  "q w e"
+  "a s d"
+  "z x c";
+  padding: 10px;
 }
 
 #display {
-  width: 50px;
-  height: 20px;
-  padding: 10px;
   border: 1px solid lightblue;
+  grid-area: display;
+  text-align: center;
+  line-height: 80px;
+  font-family: 'Roboto';
+}
+#Q {
+  grid-area: q;
+}
+#W {
+  grid-area: w;
+}
+#E {
+  grid-area: e;
+}
+#A {
+  grid-area: a;
+}
+#S {
+  grid-area: s;
+}
+#D {
+  grid-area: d;
+}
+#Z {
+  grid-area: z;
+}
+#X {
+  grid-area: x;
+}
+#C {
+  grid-area: c;
 }
 
 .drum-pad {
   padding: 10px;
   cursor: pointer;
-  width: 10px;
-  height: 10px;
   border: 1px solid red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  line-height: 1.5;
 }
-.drum-pad:focus {
-  background-color: blueviolet;
+.drum-pad-active {
+  color: goldenrod;
+  font-weight: bold;
 }
