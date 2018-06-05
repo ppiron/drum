@@ -72,4 +72,7 @@
 .drum-pad-active {
   color: goldenrod;
   font-weight: bold;
+  background-color: blueviolet;
+  transform: scale(.95);
+  transition-duration: 150ms;
 }

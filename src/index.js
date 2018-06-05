@@ -31,9 +31,9 @@ class App extends Component {
     
     // if (!this.state.play) {
       el.play();
-      par.style.backgroundColor = 'blueviolet';
-      par.style.transitionDuration = '150ms';
-      par.style.transform = 'scale(0.95)';
+      // par.style.backgroundColor = 'blueviolet';
+      // par.style.transitionDuration = '150ms';
+      // par.style.transform = 'scale(0.95)';
       this.setState({
         playCount: this.state.playCount + 1,
         display: this.state.activeNames.concat([desc]).join(' + '),
@@ -56,9 +56,9 @@ class App extends Component {
       
       // if (!this.state.play) {
         el.play();
-        par.style.backgroundColor = 'blueviolet';
-        par.style.transitionDuration = '150ms';
-        par.style.transform = 'scale(0.95)';
+        // par.style.backgroundColor = 'blueviolet';
+        // par.style.transitionDuration = '150ms';
+        // par.style.transform = 'scale(0.95)';
         this.setState({
           playCount: this.state.playCount + 1,
           display: this.state.activeNames.concat([name]).join(' + '),
