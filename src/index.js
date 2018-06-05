@@ -20,7 +20,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    document.addEventListener('keyup', this.handleKeyPress);
+    document.addEventListener('keydown', (event) => this.handleKeyPress(event));
   }
 
   handleClick(id, desc, event) {
@@ -44,25 +44,28 @@ class App extends Component {
   }
 
   
-  handleKeyPress() {
+  handleKeyPress(event) {
     
     const keys = ['Q', 'W', 'E', 'A', 'S', 'D', 'Z', 'X', 'C']
     
     if (keys.includes(event.key.toUpperCase())) {
-      const el = document.getElementById(event.key.toUpperCase());
+      const id = event.key.toUpperCase();
+      const el = document.getElementById(id);
       const par = el.parentElement;
       const name = par.getAttribute('id');
-      if (!this.state.play) {
+      
+      // if (!this.state.play) {
         el.play();
         par.style.backgroundColor = 'blueviolet';
         par.style.transitionDuration = '150ms';
         par.style.transform = 'scale(0.95)';
         this.setState({
-          play: true,
-          display: name,
-          active: event.key.toUpperCase(),
+          playCount: this.state.playCount + 1,
+          display: this.state.activeNames.concat([name]).join(' + '),
+          active: this.state.active.concat([id]),
+          activeNames: this.state.activeNames.concat([name]),
         })
-      }
+      // }
     }
   }
 

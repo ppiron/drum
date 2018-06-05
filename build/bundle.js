@@ -878,7 +878,11 @@ var App = function (_Component) {
   _createClass(App, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      document.addEventListener('keyup', this.handleKeyPress);
+      var _this2 = this;
+
+      document.addEventListener('keydown', function (event) {
+        return _this2.handleKeyPress(event);
+      });
     }
   }, {
     key: 'handleClick',
@@ -903,25 +907,28 @@ var App = function (_Component) {
     }
   }, {
     key: 'handleKeyPress',
-    value: function handleKeyPress() {
+    value: function handleKeyPress(event) {
 
       var keys = ['Q', 'W', 'E', 'A', 'S', 'D', 'Z', 'X', 'C'];
 
       if (keys.includes(event.key.toUpperCase())) {
-        var el = document.getElementById(event.key.toUpperCase());
+        var id = event.key.toUpperCase();
+        var el = document.getElementById(id);
         var par = el.parentElement;
         var name = par.getAttribute('id');
-        if (!this.state.play) {
-          el.play();
-          par.style.backgroundColor = 'blueviolet';
-          par.style.transitionDuration = '150ms';
-          par.style.transform = 'scale(0.95)';
-          this.setState({
-            play: true,
-            display: name,
-            active: event.key.toUpperCase()
-          });
-        }
+
+        // if (!this.state.play) {
+        el.play();
+        par.style.backgroundColor = 'blueviolet';
+        par.style.transitionDuration = '150ms';
+        par.style.transform = 'scale(0.95)';
+        this.setState({
+          playCount: this.state.playCount + 1,
+          display: this.state.activeNames.concat([name]).join(' + '),
+          active: this.state.active.concat([id]),
+          activeNames: this.state.activeNames.concat([name])
+        });
+        // }
       }
     }
   }, {
@@ -943,7 +950,7 @@ var App = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       var audioPads = [{
         id: 'Q',
@@ -983,8 +990,8 @@ var App = function (_Component) {
         src: 'AudioTest.wav'
       }];
       var pads = audioPads.map(function (pad) {
-        return _react2.default.createElement(_Audio2.default, { key: pad.id, id: pad.id, desc: pad.desc, isActive: _this2.state.active.includes(pad.id),
-          src: pad.src, click: _this2.handleClick, end: _this2.handleEnd });
+        return _react2.default.createElement(_Audio2.default, { key: pad.id, id: pad.id, desc: pad.desc, isActive: _this3.state.active.includes(pad.id),
+          src: pad.src, click: _this3.handleClick, end: _this3.handleEnd });
       });
       return _react2.default.createElement(
         'div',
